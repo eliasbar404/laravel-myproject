@@ -17,11 +17,11 @@
         </style>
     </head>
     <body class="antialiased">
-        <a href={{ route('Home') }}>Home page</a>
+        
 
-        <form action="/add" method="post">
+        <form action="/customers" method="post">
             @csrf
-            <input type="email" name="user_name" placeholder="email">
+            <input type="email" name="email" placeholder="email">
             <button type="submit">ADD</button>
         </form>
 

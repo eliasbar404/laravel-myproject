@@ -15,6 +15,13 @@ return new class extends Migration
     {
         Schema::create('shopping_stores', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->references('id')->on('users');
+            $table->string('name')->unique();
+            $table->string('phone')->unique();
+            $table->string('phone2')->unique();
+            $table->string('address');
+            $table->string('address2');
+            $table->longText('description');
             $table->timestamps();
         });
     }

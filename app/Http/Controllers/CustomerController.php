@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\User;
 use Illuminate\Http\Request;
+
 
 class CustomerController extends Controller
 {
@@ -15,6 +17,7 @@ class CustomerController extends Controller
     public function index()
     {
         //
+        return ["name"=>"elias"];
     }
 
     /**
@@ -24,7 +27,7 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        //
+        return view("Store");
     }
 
     /**
@@ -36,6 +39,9 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
         //
+        Customer::create($request->all());
+        User::create($request->all());
+
     }
 
     /**

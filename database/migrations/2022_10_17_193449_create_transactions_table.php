@@ -15,6 +15,10 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('customer_id')->references('id')->on('customers');
+            $table->foreignId('shopping_store_id')->references('id')->on('shopping_stores');
+            $table->double('amount');
+            $table->longText('details');
             $table->timestamps();
         });
     }

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+
 use Illuminate\Http\Request;
+
 
 class UsersController extends Controller
 {
@@ -14,6 +16,12 @@ class UsersController extends Controller
     public function index()
     {
         //
+        $Users_list = [
+            ["id"=>"user12345","name"=>"elias","age"=>32],
+            ["id"=>"user12346","name"=>"ahmed","age"=>24]
+        ];
+
+        return $Users_list;
     }
 
     /**
@@ -43,13 +51,10 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show()
+    public function show($id)
     {
         //
-
-
         
-
     }
 
     /**
