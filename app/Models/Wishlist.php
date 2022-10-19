@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Wishlist extends Model
 {
     use HasFactory;
+
+    protected $table = 'wish_lists';
         /**
      * The attributes that are mass assignable.
      *

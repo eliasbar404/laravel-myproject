@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Shopping_cart extends Model
 {
     use HasFactory;
+
+    protected $table = 'shopping_carts';
         /**
      * The attributes that are mass assignable.
      *

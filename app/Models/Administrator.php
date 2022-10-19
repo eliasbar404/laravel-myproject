@@ -9,6 +9,9 @@ class Administrator extends Model
 {
     use HasFactory;
 
+
+    protected $table = 'administrators';
+
         /**
      * The attributes that are mass assignable.
      *

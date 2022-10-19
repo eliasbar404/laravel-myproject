@@ -9,6 +9,8 @@ class Cart extends Model
 {
     use HasFactory;
 
+    protected $table = 'carts';
+
         /**
      * The attributes that are mass assignable.
      *
