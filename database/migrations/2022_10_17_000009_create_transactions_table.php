@@ -14,11 +14,16 @@ return new class extends Migration
     public function up()
     {
         Schema::create('transactions', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('customer_id')->references('id')->on('customers');
-            $table->foreignId('shopping_store_id')->references('id')->on('shopping_stores');
+            $table->string('transaction_id');
             $table->double('amount');
             $table->longText('details');
+            $table->string('customer_id');
+            $table->string('shopping_store_id');
+
+
+            $table->primary('transaction_id');
+            $table->foreign('customer_id')->references('customer_id')->on('customers');
+            $table->foreign('shopping_store_id')->references('shopping_store_id')->on('shoppingStores');
             $table->timestamps();
         });
     }

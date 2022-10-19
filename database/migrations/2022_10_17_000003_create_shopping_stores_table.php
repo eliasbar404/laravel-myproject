@@ -13,15 +13,18 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('shopping_stores', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->references('id')->on('users');
+        Schema::create('shoppingStores', function (Blueprint $table) {
+            $table->string('shopping_store_id');
+            $table->string('user_id');
             $table->string('name')->unique();
             $table->string('phone')->unique();
             $table->string('phone2')->unique();
             $table->string('address');
             $table->string('address2');
             $table->longText('description');
+
+            $table->primary('shopping_store_id');
+            $table->foreign('user_id')->references('user_id')->on('users');
             $table->timestamps();
         });
     }
@@ -33,6 +36,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('shopping_stores');
+        Schema::dropIfExists('shoppingStores');
     }
 };

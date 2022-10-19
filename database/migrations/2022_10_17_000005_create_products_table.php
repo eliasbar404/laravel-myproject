@@ -14,13 +14,18 @@ return new class extends Migration
     public function up()
     {
         Schema::create('products', function (Blueprint $table) {
-            $table->id();
+            $table->string('product_id');
             $table->string('name');
             $table->longText('description');
-            $table->foreignId('shopping_store_id')->references('id')->on('shopping_stores');
-            $table->foreignId('category_id')->references('id')->on('categories');
             $table->double('price');
             $table->integer('discount');
+            $table->string('shopping_store_id');
+            $table->string('category_id');
+
+            $table->primary('product_id');
+            $table->foreign('shopping_store_id')->references('shopping_store_id')->on('shoppingStores');
+            $table->foreign('category_id')->references('category_id')->on('categories');
+
             $table->timestamps();
         });
     }

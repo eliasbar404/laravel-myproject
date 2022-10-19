@@ -13,12 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('reviews', function (Blueprint $table) {
-            $table->id();
-            $table->longText('description');
-            $table->integer('rating');
-            $table->foreignId('customer_id')->references('id')->on('customers');
-            $table->foreignId('product_id')->references('id')->on('products');
+        Schema::create('administrators', function (Blueprint $table) {
+            $table->string('administrator_id');
+            $table->string('user_id');
+
+
+            $table->primary('administrator_id');
+            $table->foreign('user_id')->references('user_id')->on('users');
             $table->timestamps();
         });
     }
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('reviews');
+        Schema::dropIfExists('administrators');
     }
 };
