@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('wishlists', function (Blueprint $table) {
+        Schema::create('wish_lists', function (Blueprint $table) {
             $table->string('wishlist_id');
             $table->string('customer_id');
             $table->string('product_id');

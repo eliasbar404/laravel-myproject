@@ -24,7 +24,7 @@ return new class extends Migration
 
             $table->primary('product_id');
             $table->foreign('shopping_store_id')->references('shopping_store_id')->on('shopping_stores');
-            $table->foreign('category_id')->references('category_id')->on('categorys');
+            $table->foreign('category_id')->references('category_id')->on('categories');
 
             $table->timestamps();
         });
