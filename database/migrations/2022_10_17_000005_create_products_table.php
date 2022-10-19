@@ -18,13 +18,13 @@ return new class extends Migration
             $table->string('name');
             $table->longText('description');
             $table->double('price');
-            $table->integer('discount');
+            $table->integer('discount')->default(0);
             $table->string('shopping_store_id');
             $table->string('category_id');
 
             $table->primary('product_id');
-            $table->foreign('shopping_store_id')->references('shopping_store_id')->on('shoppingStores');
-            $table->foreign('category_id')->references('category_id')->on('categories');
+            $table->foreign('shopping_store_id')->references('shopping_store_id')->on('shopping_stores');
+            $table->foreign('category_id')->references('category_id')->on('categorys');
 
             $table->timestamps();
         });

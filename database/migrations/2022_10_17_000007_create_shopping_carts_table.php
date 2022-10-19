@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('shoppingCarts', function (Blueprint $table) {
+        Schema::create('shopping_carts', function (Blueprint $table) {
             $table->string('shopping_cart_id');
             $table->string('cart_id');
             $table->string('product_id');

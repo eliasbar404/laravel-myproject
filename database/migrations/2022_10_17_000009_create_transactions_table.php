@@ -23,7 +23,7 @@ return new class extends Migration
 
             $table->primary('transaction_id');
             $table->foreign('customer_id')->references('customer_id')->on('customers');
-            $table->foreign('shopping_store_id')->references('shopping_store_id')->on('shoppingStores');
+            $table->foreign('shopping_store_id')->references('shopping_store_id')->on('shopping_stores');
             $table->timestamps();
         });
     }
