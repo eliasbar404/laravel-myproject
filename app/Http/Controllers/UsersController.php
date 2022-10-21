@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Models\User;
 use Illuminate\Http\Request;
 
 
@@ -15,24 +15,11 @@ class UsersController extends Controller
      */
     public function index()
     {
-        //
-        $Users_list = [
-            ["id"=>"user12345","name"=>"elias","age"=>32],
-            ["id"=>"user12346","name"=>"ahmed","age"=>24]
-        ];
-
-        return $Users_list;
+       // $users =  User::all();
+        $users = User::select('user_id','email','password')->get();
+        return $users->makeVisible('password')->toArray();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -42,7 +29,18 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'email'    =>'required',
+            'password' =>'required',
+        ]);
+
+        $user = new User();
+        $user->user_id   = uniqid('user');
+        $user->email     = $request->email;
+        $user->password  = $request->password;
+        $user->user_type = 'customer';
+
+        $user->save();
     }
 
     /**
@@ -53,20 +51,11 @@ class UsersController extends Controller
      */
     public function show($id)
     {
-        //
+        $user = User::where('user_id',$id)->get();
+        return $user;
         
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -88,6 +77,6 @@ class UsersController extends Controller
      */
     public function destroy($id)
     {
-        //
+        User::where('user_id',$id)->delete();
     }
 }

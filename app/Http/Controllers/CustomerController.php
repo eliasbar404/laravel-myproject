@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Customer;
 use App\Models\User;
+use App\Models\Customer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 
 class CustomerController extends Controller
@@ -17,18 +18,15 @@ class CustomerController extends Controller
     public function index()
     {
         //
-        return ["name"=>"elias"];
+        // return Customer::all();
+        return DB::table('users')
+            ->join('customers', 'users.user_id', '=', 'customers.user_id')
+            ->select('users.user_id','users.email','customers.phone', 'customers.name')
+            ->get();
+
+
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view("Store");
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -38,9 +36,36 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        Customer::create($request->all());
-        User::create($request->all());
+        
+        $id  = uniqid('user');
+
+        $request->validate([
+            'name'           =>'required',
+            'email'          =>'required',
+            'password'       =>'required',
+            'gender'         =>'required',
+            'phone'          =>'required',
+            'birth_date'     =>'required',
+        ]);
+
+        $user       = new User();
+        $customer   = new Customer();
+    
+        
+        $user->user_id   = $id;
+        $user->email     = $request->email;
+        $user->password  = $request->password;
+        $user->user_type = 'customer';
+        $user->save();
+
+        
+        $customer->customer_id   = $id;
+        $customer->user_id       = $id;
+        $customer->name          = $request->name;
+        $customer->phone         = $request->phone;
+        $customer->gender        = $request->gender;
+        $customer->birth_date    = $request->birth_date;
+        $customer->save();
 
     }
 
@@ -50,21 +75,13 @@ class CustomerController extends Controller
      * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function show(Customer $customer)
+    public function show($customer)
     {
         //
+        return Customer::select('*')->where('customer_id',$customer)->get();
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Customer  $customer
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Customer $customer)
-    {
-        //
-    }
+
 
     /**
      * Update the specified resource in storage.
