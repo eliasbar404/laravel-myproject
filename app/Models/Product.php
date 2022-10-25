@@ -20,6 +20,7 @@ class Product extends Model
         'name',
         'description',
         'price',
+        'discount',
         'shopping_store_id',
         'category_id'
     ];

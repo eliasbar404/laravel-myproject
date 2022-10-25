@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Images;
+use App\Models\Image;
 use Illuminate\Http\Request;
 
 class ImagesController extends Controller
@@ -35,7 +35,29 @@ class ImagesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+
+        $request->validate([
+
+
+            'image' => ['required'],
+
+        ]);
+
+  
+
+        $fileName = time().'.'.$request->image->extension();  
+
+        $request->file->move(public_path('uploads'), $fileName);
+
+    
+
+        Image::create([
+
+
+            'name' => $fileName
+
+        ]);
     }
 
     /**
@@ -44,7 +66,7 @@ class ImagesController extends Controller
      * @param  \App\Models\Images  $images
      * @return \Illuminate\Http\Response
      */
-    public function show(Images $images)
+    public function show(Image $images)
     {
         //
     }
@@ -55,7 +77,7 @@ class ImagesController extends Controller
      * @param  \App\Models\Images  $images
      * @return \Illuminate\Http\Response
      */
-    public function edit(Images $images)
+    public function edit(Image $images)
     {
         //
     }
@@ -67,7 +89,7 @@ class ImagesController extends Controller
      * @param  \App\Models\Images  $images
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Images $images)
+    public function update(Request $request, Image $images)
     {
         //
     }
@@ -78,7 +100,7 @@ class ImagesController extends Controller
      * @param  \App\Models\Images  $images
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Images $images)
+    public function destroy(Image $images)
     {
         //
     }

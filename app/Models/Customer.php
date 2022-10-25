@@ -11,7 +11,7 @@ class Customer extends Model
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    protected $table = 'customers';
+    protected $table ='customers';
 
     /**
      * The attributes that are mass assignable.

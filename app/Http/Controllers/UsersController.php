@@ -30,15 +30,16 @@ class UsersController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'email'    =>'required',
-            'password' =>'required',
+            'email'      =>'required',
+            'password'   =>'required',
+            'user_type'  =>'required',
         ]);
 
         $user = new User();
         $user->user_id   = uniqid('user');
-        $user->email     = $request->email;
-        $user->password  = $request->password;
-        $user->user_type = 'customer';
+        $user->email     = $request->get('email');
+        $user->password  = $request->get('password');
+        $user->user_type = 'admin';
 
         $user->save();
     }

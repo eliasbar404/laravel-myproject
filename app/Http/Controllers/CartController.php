@@ -44,9 +44,12 @@ class CartController extends Controller
      * @param  \App\Models\Cart  $cart
      * @return \Illuminate\Http\Response
      */
-    public function show(Cart $cart)
+    public function show(Request $request)
     {
-        //
+        $request->validate([
+            "customer_id" => "required",
+        ]);
+        return Cart::where('customer_id',$request->customer_id)->get();
     }
 
     /**

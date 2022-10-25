@@ -14,18 +14,10 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        return Category::select('category_id','name','description')->get();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -35,7 +27,19 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
+        $request->validate([
+            'name'        => 'required',
+            'description' => 'required',
+        ]);
+        $category_id = uniqid('category_');
+        $category = new Category();
+        $category->category_id  =  $category_id;
+        $category->name         =  $request->name;
+        $category->description  =  $request->description;
+        $category->save();
+
+        return response('the add of category is done !');
     }
 
     /**
@@ -44,21 +48,12 @@ class CategoryController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function show(Category $category)
+    public function show($category_id)
     {
-        //
+        $category = Category::select('category_id','name','description')->where('category_id',$category_id)->get();
+        return $category;
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Category  $category
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Category $category)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -67,9 +62,20 @@ class CategoryController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request,$category_id)
     {
-        //
+        $request->validate([
+            'name'        =>  'required',
+            'description' =>  'required'
+        ]);
+
+        Category::where('category_id',$category_id)
+        ->update(['name'      =>$request->name,
+                'description' =>$request->description
+                ]);
+
+        return response('category updated done !');
+
     }
 
     /**
@@ -78,8 +84,9 @@ class CategoryController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy($category_id)
     {
-        //
+        Category::where('category_id','=',$category_id)->delete();
+        return response('delete category is done !');
     }
 }

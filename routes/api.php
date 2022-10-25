@@ -33,7 +33,7 @@ Route::resources([
     'users'             => UsersController::class,
     'customers'         => CustomerController::class,
     'administrators'    => AdministratorController::class,
-    'shoppingstores'    => ShoppingStoreController::class,
+    'shopping_stores'   => ShoppingStoreController::class,
     'carts'             => CartController::class,
     'shoppingcarts'     => ShoppingCartController::class,
     'products'          => ProductController::class,

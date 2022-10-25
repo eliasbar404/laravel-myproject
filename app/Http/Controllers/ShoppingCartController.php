@@ -14,18 +14,9 @@ class ShoppingCartController extends Controller
      */
     public function index()
     {
-        //
+        
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -35,7 +26,21 @@ class ShoppingCartController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
+        $request->validate([
+            'cart_id'    =>'required',
+            'product_id' =>'required',
+            'quantity'   =>'required',
+        ]);
+
+        $shopping_cart_id = uniqid('shopping_cart_');
+
+        $shopping_cart = new Shopping_cart();
+        $shopping_cart->shopping_cart_id = $shopping_cart_id;
+        $shopping_cart->cart_id          = $request->cart_id;
+        $shopping_cart->product_id       = $request->product_id;
+        $shopping_cart->quantity         = $request->quantity;
+        $shopping_cart->save();
     }
 
     /**

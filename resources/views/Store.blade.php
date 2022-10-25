@@ -19,9 +19,9 @@
     <body class="antialiased">
         
 
-        <form action="/customers" method="post">
+        <form action="/api/images" method="post">
             @csrf
-            <input type="email" name="email" placeholder="email">
+            <input type="file" name="image" placeholder="image">
             <button type="submit">ADD</button>
         </form>
 

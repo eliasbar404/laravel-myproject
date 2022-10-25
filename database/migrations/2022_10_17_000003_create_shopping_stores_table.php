@@ -18,9 +18,9 @@ return new class extends Migration
             $table->string('user_id');
             $table->string('name')->unique();
             $table->string('phone')->unique();
-            $table->string('phone2')->unique();
+            $table->string('phone2')->default(null);
             $table->string('address');
-            $table->string('address2');
+            $table->string('address2')->default(null);
             $table->longText('description');
 
             $table->primary('shopping_store_id');

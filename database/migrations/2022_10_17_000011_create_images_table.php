@@ -15,9 +15,8 @@ return new class extends Migration
     {
         Schema::create('images', function (Blueprint $table) {
             $table->string('image_id');
-            $table->string('image')->nullable();
-            $table->integer('created_by')->nullable();
-            $table->integer('updated_by')->nullable();
+            $table->string('title');
+            $table->string('name');
             $table->string('product_id');
 
             $table->primary('image_id');
