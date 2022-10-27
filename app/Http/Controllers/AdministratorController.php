@@ -35,14 +35,16 @@ class AdministratorController extends Controller
                 'email'    =>'required',
                 'password' =>'required',
             ]);
-
+        // Insert data in User Table
+        // -------------------------
         $user = new User();
         $user->user_id    = $user_id;
         $user->email      = $request->email;
         $user->password   = $request->password;
         $user->user_type  = $user_type;
         $user->save();
-    
+        // Insert data in Admin Table
+        // --------------------------
         $administrator = new Administrator();
         $administrator->administrator_id = $user_id;
         $administrator->user_id          = $user_id;
@@ -90,13 +92,6 @@ class AdministratorController extends Controller
         ->update(["email"=>$request->email,"password"=>$request->password]);
 
         return response('updating admin is done !');
-
-
-
-
-
-
-
     }
 
     /**
@@ -105,8 +100,11 @@ class AdministratorController extends Controller
      * @param  \App\Models\Administrator  $administrator
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Administrator $administrator)
+    public function destroy($user_id)
     {
-        //
+        Administrator::where('administrator_id',$user_id)->delete();
+        User::where('user_id',$user_id)->delete();
+
+        return response('The deleting of admin is done !');
     }
 }

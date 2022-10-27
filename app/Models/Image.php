@@ -16,9 +16,8 @@ class Image extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        // 'image_id',
-        'title',
-        'name',
-        // 'product_id'
+        'image_id',
+        'image',
+        'product_id'
     ];
 }

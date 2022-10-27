@@ -100,8 +100,9 @@ class ImagesController extends Controller
      * @param  \App\Models\Images  $images
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Image $images)
+    public function destroy($image_id)
     {
-        //
+        Image::where('image_id',$image_id)->delete();
+        return response('The deleting of image is done !');
     }
 }

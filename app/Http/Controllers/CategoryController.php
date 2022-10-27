@@ -39,7 +39,7 @@ class CategoryController extends Controller
         $category->description  =  $request->description;
         $category->save();
 
-        return response('the add of category is done !');
+        return response('The add of Category is Done !');
     }
 
     /**
@@ -74,8 +74,7 @@ class CategoryController extends Controller
                 'description' =>$request->description
                 ]);
 
-        return response('category updated done !');
-
+        return response('Category updated is done !');
     }
 
     /**
@@ -87,6 +86,6 @@ class CategoryController extends Controller
     public function destroy($category_id)
     {
         Category::where('category_id','=',$category_id)->delete();
-        return response('delete category is done !');
+        return response('Delete category is done !');
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Shopping_store;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ShoppingStoreController extends Controller
 {
@@ -39,7 +40,8 @@ class ShoppingStoreController extends Controller
             'address2'   => 'required',
             'description'=> 'required'
         ]);
-
+        // Insert into User table
+        // ----------------------
         $user_id  = uniqid('user_');
         $user = new User();
         $user->user_id   = $user_id ;
@@ -47,7 +49,8 @@ class ShoppingStoreController extends Controller
         $user->email     = $request->email;
         $user->user_type = 'shopping_store';
         $user->save();
-
+        // Insert into Shopping store table
+        // -------------------------------
         $shopping_store = new Shopping_store();
         $shopping_store->shopping_store_id  = $user_id;
         $shopping_store->user_id            = $user_id;
@@ -59,9 +62,8 @@ class ShoppingStoreController extends Controller
         $shopping_store->description        = $request->description;
         $shopping_store->save();
 
-        return response('the shopping store was added !');
+        return response('The add of shopping store  is Done !');
     }
-
     /**
      * Display the specified resource.
      *
@@ -70,9 +72,11 @@ class ShoppingStoreController extends Controller
      */
     public function show($shopping_store_id)
     {
-        $shopping_store_data = Shopping_store::select('shopping_store_id','name','phone','phone2','address','address2','description')
-                                ->where('shopping_store_id',$shopping_store_id)
-                                ->get();
+        $shopping_store_data = DB::table('shopping_stores')
+        ->join('users', 'shopping_stores.user_id', '=', 'users.user_id')
+        ->select('shopping_stores.shopping_store_id','users.email','users.password', 'shopping_stores.name','shopping_stores.phone','shopping_stores.phone2','shopping_stores.address','shopping_stores.address2','shopping_stores.description')
+        ->where('shopping_stores.shopping_store_id','=',$shopping_store_id)
+        ->get();
 
         return $shopping_store_data;
     }
@@ -85,7 +89,7 @@ class ShoppingStoreController extends Controller
      * @param  \App\Models\shopping_store  $shopping_store
      * @return \Illuminate\Http\Response
      */
-    public function update($shopping_store_id,Request $request)
+    public function update(Request $request,$shopping_store_id)
     {
         $request->validate([
             'email'       =>'required',
@@ -114,7 +118,7 @@ class ShoppingStoreController extends Controller
                     'description' =>$request->description
                 ]);
 
-        return response('the update of shopping store was done !');
+        return response('The update of shopping store information is Done !');
     }
 
     /**
@@ -128,6 +132,6 @@ class ShoppingStoreController extends Controller
         Shopping_store::where('shopping_store_id',$shopping_store_id)->delete();
         User::where('user_id',$shopping_store_id)->delete();
 
-        return response('the shopping sotore is deleted !');
+        return response('The Shopping Store is Deleted !');
     }
 }

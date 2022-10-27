@@ -19,7 +19,6 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        //
         // return Customer::all();
         $customers =  DB::table('users')
             ->join('customers', 'users.user_id', '=', 'customers.user_id')
@@ -28,10 +27,7 @@ class CustomerController extends Controller
             ->get();
 
         return $customers;
-
-
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -57,16 +53,15 @@ class CustomerController extends Controller
         $customer   = new Customer();
         $cart       = new Cart();
 
-
-        
-        //insert user table
+        //insert Into User table
+        // --------------------
         $user->user_id   = $user_id;
         $user->email     = $request->email;
         $user->password  = $request->password;
         $user->user_type = 'customer';
         $user->save();
-
-        //insert customer table
+        //insert Into customer table
+        // -------------------------
         $customer->customer_id   = $user_id;
         $customer->user_id       = $user_id;
         $customer->name          = $request->name;
@@ -74,13 +69,13 @@ class CustomerController extends Controller
         $customer->gender        = $request->gender;
         $customer->birth_date    = $request->birth_date;
         $customer->save();
-
-        //create a cart for user
+        //create a cart for user/customer
+        // ---------------------
         $cart->cart_id     = $cart_id;
         $cart->customer_id = $user_id;
         $cart->save();
-
-        return response('the operation has done');
+        
+        return response('The creation of a Customer has done !');
     }
 
     /**
@@ -101,8 +96,6 @@ class CustomerController extends Controller
         return $customer;
     }
 
-
-
     /**
      * Update the specified resource in storage.
      *
@@ -119,15 +112,17 @@ class CustomerController extends Controller
             'phone'          =>'required',
         ]);
         
-        //update in user table
+        // Update in user table
+        // -------------------
         User::where('user_id',$user_id)
         ->update(['email' => $request->email,'password'=> $request->password]);
 
-        //update in customer table
+        // Update in customer table
+        // -----------------------
         Customer::where('customer_id',$user_id)
         ->update(['name' => $request->name,'phone'=> $request->phone]);
 
-        return response('the update is done !');
+        return response('The update of Customer is  done !');
     }
 
     /**
@@ -138,9 +133,14 @@ class CustomerController extends Controller
      */
     public function destroy($user_id)
     {
+        // Delete Cart
         Cart::where('customer_id',$user_id)->delete();
+        // Delete in Customer table
         Customer::where('customer_id',$user_id)->delete();
+        // Delete in user table
         User::where('user_id',$user_id)->delete();
-        return response('the delete is done !');
+
+
+        return response('The delete of Customer is  done !');
     }
 }

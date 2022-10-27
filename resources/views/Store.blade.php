@@ -19,9 +19,32 @@
     <body class="antialiased">
         
 
-        <form action="/api/images" method="post">
+        <form action="/api/products" method="post" enctype="multipart/form-data">
             @csrf
-            <input type="file" name="image" placeholder="image">
+            <input type="text" placeholder="name"        name="name">
+            <br>
+            <input type="text" placeholder="description" name="description">
+            <br>
+            <input type="text" placeholder="price"        name="price">
+            <br>
+            <input type="text" placeholder="discount" name="discount">
+            <br>
+            <input type="text" placeholder="shopping_store_id" name="shopping_store_id">
+            <br>
+            <input type="text" placeholder="category_id" name="category_id">
+            <br>
+
+            <input type="file" name="image1" placeholder="image">
+            <br>
+            <input type="file" name="image2" placeholder="image">
+            <br>
+            <input type="file" name="image3" placeholder="image">
+            <br>
+            <input type="file" name="image4" placeholder="image">
+            <br>
+            <input type="file" name="image5" placeholder="image">
+            <br>
+
             <button type="submit">ADD</button>
         </form>
 
