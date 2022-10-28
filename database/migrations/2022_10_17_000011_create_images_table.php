@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('image_id');
             $table->text('image');
             $table->string('product_id');
+            $table->string('type');
             $table->primary('image_id');
             $table->foreign('product_id')->references('product_id')->on('products');
             $table->timestamps();

@@ -92,8 +92,29 @@ class CustomerController extends Controller
         ->select('users.user_id','users.email','users.password','customers.phone', 'customers.name')
         ->where('customers.customer_id','=',$user_id)
         ->get();
+
+        $shopping_carts = DB::table('customers')
+        ->join('carts','customers.customer_id','=','carts.customer_id')
+        ->join('shopping_carts','carts.cart_id','=','shopping_carts.cart_id')
+        ->join('products','shopping_carts.product_id','=','products.product_id')
+        ->join('images','products.product_id','=','images.product_id')
+        ->select('shopping_carts.product_id','products.name','products.price','shopping_carts.quantity','images.image')
+        ->where('customers.customer_id',$user_id)
+        ->get();
+
+        $wish_list = DB::table('customers')
+        ->join('wish_lists','customers.customer_id','=','wish_lists.customer_id')
+        ->join('products','wish_lists.product_id','=','products.product_id')
+        ->join('images','products.product_id','=','images.product_id')
+        ->select('products.product_id','products.name','products.price','images.image')
+        ->where('customers.customer_id',$user_id)
+        ->get();
         
-        return $customer;
+        return [
+            "customer_data"      =>$customer,
+            "shopping_carts"     =>$shopping_carts,
+            "wish_list"          =>$wish_list
+        ];
     }
 
     /**

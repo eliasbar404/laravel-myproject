@@ -83,8 +83,11 @@ class ShoppingCartController extends Controller
      * @param  \App\Models\Shopping_cart  $shopping_cart
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Shopping_cart $shopping_cart)
+    public function destroy($shopping_cart_id)
     {
-        //
+        Shopping_cart::where('shopping_cart_id',$shopping_cart_id)
+        ->delete();
+
+        return response("the delete of shopping cart is done !");
     }
 }

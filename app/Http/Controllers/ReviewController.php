@@ -44,6 +44,8 @@ class ReviewController extends Controller
         $review->rating        = $request->rating;
         $review->save();
 
+        return response('the add of reviews id done !');
+
     }
 
     /**
@@ -83,8 +85,9 @@ class ReviewController extends Controller
      * @param  \App\Models\Review  $review
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Review $review)
+    public function destroy($review_id)
     {
-        //
+        Review::where('review_id',$review_id)->delete();
+        return response('the deleting of the reviews is done !');
     }
 }

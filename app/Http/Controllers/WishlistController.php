@@ -28,12 +28,13 @@ class WishlistController extends Controller
      */
     public function store(Request $request)
     {
-        $id  = uniqid('wishlist');
+        
         $request->validate([
             'customer_id' =>'required',
             'product_id'  =>'required',
         ]);
 
+        $id  = uniqid('wishlist_');
         $wishlist = new Wishlist();
         $wishlist->wishlist_id  = $id;
         $wishlist->customer_id  = $request->customer_id;
@@ -54,14 +55,14 @@ class WishlistController extends Controller
      */
     public function show($customer_id)
     {
-        $customer =  DB::table('customers')
-        ->join('wish_lists', 'customers.customer_id', '=', 'customers.customer_id')
-        ->join('products','wish_list.product_id','=','products.product_id')
-        ->select('users.user_id','products.product_id','products.name','products.price','prodocuts.discount')
-        ->where('wish_lists.wishlist_id','=',$customer_id)
+        $wish_list =  DB::table('wish_lists')
+        ->join('customers', 'customers.customer_id', '=', 'wish_lists.customer_id')
+        ->join('products','wish_lists.product_id','=','products.product_id')
+        ->select('products.product_id','products.name','products.price','products.discount')
+        ->where('wish_lists.customer_id','=',$customer_id)
         ->get();
         
-        return $customer;
+        return $wish_list;
     }
 
 
