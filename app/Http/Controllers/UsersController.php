@@ -16,7 +16,7 @@ class UsersController extends Controller
     public function index()
     {
        // $users =  User::all();
-        $users = User::select('user_id','email','password')->get();
+        $users = User::select('user_id','email','password','user_type')->get();
         return $users->makeVisible('password')->toArray();
     }
 

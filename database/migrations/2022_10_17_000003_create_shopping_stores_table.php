@@ -22,6 +22,8 @@ return new class extends Migration
             $table->string('address');
             $table->string('address2')->default(null);
             $table->longText('description');
+            // Logo
+            // $table->string('logo')->default(null);
 
             $table->primary('shopping_store_id');
             $table->foreign('user_id')->references('user_id')->on('users');

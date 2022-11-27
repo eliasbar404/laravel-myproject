@@ -2,25 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Image;
+use App\Models\Gallery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-class ImagesController extends Controller
+class GalleryController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
+        if($request->has('shopping_store_id')){
+            return Gallery::where('shopping_store_id',$request->shopping_store_id)->get();
+        }
+        else{
+            return Gallery::all();
+        }
         
-            return Image::all();
-        
-        
-
     }
 
     /**
@@ -41,44 +43,46 @@ class ImagesController extends Controller
      */
     public function store(Request $request)
     {
-
+        //
         $request->validate([
-            'image'      => 'required',
-            'product_id' => 'required',
+            'image'             => 'required|image',
+            'shopping_store_id' => 'required',
         ]);
-        $product_img  = new Image();
+
+        $gallery_img  = new Gallery();
         $image_id     = uniqid('image_');
-        $product_img->image_id    = $image_id;
-        $product_img->product_id  = $request->product_id;
-        $product_img->type        = 'main_product_image';
+        $gallery_img->image_id    = $image_id;
+        $gallery_img->shopping_store_id  = $request->shopping_store_id;
 
-        $filename = Str::random(32).".".$request->file('image')->getClientOriginalExtension();
-        $request->file('image')->move('uploads/', $filename);
+        $filename = Str::random(32).".".$request->image->getClientOriginalExtension();
+        $request->image->move('uploads/', $filename);
 
 
-        $product_img->image  = $filename;
-        $product_img->save();
+        $gallery_img->image  = $filename;
+        $gallery_img->save();
         return response('done!');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Images  $images
+     * @param  \App\Models\Gallery  $gallery
      * @return \Illuminate\Http\Response
      */
-    public function show(Image $images)
+    public function show($shopping_store_id)
     {
         //
+
+        return Gallery::where('shopping_store_id',$shopping_store_id)->get();
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Images  $images
+     * @param  \App\Models\Gallery  $gallery
      * @return \Illuminate\Http\Response
      */
-    public function edit(Image $images)
+    public function edit(Gallery $gallery)
     {
         //
     }
@@ -87,10 +91,10 @@ class ImagesController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Images  $images
+     * @param  \App\Models\Gallery  $gallery
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Image $images)
+    public function update(Request $request, Gallery $gallery)
     {
         //
     }
@@ -98,12 +102,11 @@ class ImagesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Images  $images
+     * @param  \App\Models\Gallery  $gallery
      * @return \Illuminate\Http\Response
      */
-    public function destroy($image_id)
+    public function destroy(Gallery $gallery)
     {
-        Image::where('image_id',$image_id)->delete();
-        return response('The deleting of image is done !');
+        //
     }
 }

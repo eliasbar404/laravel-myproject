@@ -16,6 +16,7 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ImagesController;
+use App\Http\Controllers\GalleryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +43,7 @@ Route::resources([
     'reviews'           => ReviewController::class,
     'categories'        => CategoryController::class,
     'images'            => ImagesController::class,
+    'galleries'           => GalleryController::class,
 ]);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

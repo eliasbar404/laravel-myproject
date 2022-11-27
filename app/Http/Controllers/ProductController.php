@@ -23,10 +23,65 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $pro = Product::all();
+
+        if($request->has('store_id')){
+            $products = DB::table('products')
+            ->join('images','products.product_id','=','images.product_id')
+            ->select('products.product_id','products.name','products.price','products.discount','images.image')
+            ->where('products.shopping_store_id',$request->store_id)
+            ->where('images.type','main_product_image')
+            ->get();
+            return $products;
+        }
+        if($request->has('category_id') && $request->has('name')){
+
+            $products = DB::table('categories')
+            ->join('products','categories.category_id','=','products.category_id')
+            ->join('images','products.product_id','=','images.product_id')
+            ->select('products.product_id','products.name','products.price','products.discount','images.image')
+            ->where('categories.category_id',$request->category_id )
+            ->where('products.name','=',$request->name)
+            ->where('images.type','=','main_product_image')
+            ->get();
+            
+            return $products;
+            
+            }
+        if($request->has('category_id')){
+            $products = DB::table('categories')
+            ->join('products','categories.category_id','=','products.category_id')
+            ->join('images','products.product_id','=','images.product_id')
+            ->select('products.product_id','products.name','products.price','products.discount','images.image')
+            ->where('categories.category_id',$request->category_id )
+            ->where('images.type','=','main_product_image')
+            ->get();
+            return $products;
+            }
+        if($request->has('name')){
+
+                $products = DB::table('categories')
+                ->join('products','categories.category_id','=','products.category_id')
+                ->join('images','products.product_id','=','images.product_id')
+                ->select('products.product_id','products.name','products.price','products.discount','images.image')
+                ->where('products.name','like',"%$request->name%")
+                ->where('images.type','=','main_product_image')
+                ->get();
+                
+                return $products;
+                
+                }
+        
+        $pro = DB::table('products')
+        ->join('images','products.product_id','=','images.product_id')
+        ->select('products.product_id','products.name','products.price','products.discount','images.image')
+        ->where('images.type','main_product_image')
+        ->get();
+        
         return $pro;
+        
+    
     }
 
 
@@ -71,11 +126,12 @@ class ProductController extends Controller
             $product_img->image_id    = $image_id;
             $product_img->product_id  = $product_id;
             $product_img->type        = 'main_product_image';
-    
-            $imageName = Str::random() . '.' . $request->image1->getClientOriginalExtension();
-            Storage::disk('public')->putFileAs('product/image', $request->image1, $imageName);
 
-            $product_img->image  = $imageName;
+            $filename = Str::random(32).".".$request->file('image1')->getClientOriginalExtension();
+            $request->file('image1')->move('uploads/', $filename);
+
+
+            $product_img->image  = $filename;
             $product_img->save();
 
             if($request->has('image2')){
@@ -85,10 +141,10 @@ class ProductController extends Controller
                 $product_img->product_id  = $product_id;
                 $product_img->type        = 'product_image2';
         
-                $imageName = Str::random() . '.' . $request->image2->getClientOriginalExtension();
-                Storage::disk('public')->putFileAs('product/image', $request->image2, $imageName);
+                $filename = Str::random(32).".".$request->file('image2')->getClientOriginalExtension();
+                $request->file('image2')->move('uploads/', $filename);
     
-                $product_img->image  = $imageName;
+                $product_img->image  = $filename;
                 $product_img->save();
 
             };
@@ -100,10 +156,10 @@ class ProductController extends Controller
                 $product_img->product_id  = $product_id;
                 $product_img->type        = 'product_image3';
         
-                $imageName = Str::random() . '.' . $request->image3->getClientOriginalExtension();
-                Storage::disk('public')->putFileAs('product/image', $request->image3, $imageName);
+                $filename = Str::random(32).".".$request->file('image3')->getClientOriginalExtension();
+                $request->file('image3')->move('uploads/', $filename);
     
-                $product_img->image  = $imageName;
+                $product_img->image  = $filename;
                 $product_img->save();
 
             };
@@ -115,10 +171,10 @@ class ProductController extends Controller
                 $product_img->product_id  = $product_id;
                 $product_img->type        = 'product_image4';
         
-                $imageName = Str::random() . '.' . $request->image4->getClientOriginalExtension();
-                Storage::disk('public')->putFileAs('product/image', $request->image4, $imageName);
+                $filename = Str::random(32).".".$request->file('image4')->getClientOriginalExtension();
+                $request->file('image4')->move('uploads/', $filename);
     
-                $product_img->image  = $imageName;
+                $product_img->image  = $filename;
                 $product_img->save();
 
             };
@@ -130,12 +186,11 @@ class ProductController extends Controller
                 $product_img->product_id  = $product_id;
                 $product_img->type        = 'product_image5';
         
-                $imageName = Str::random() . '.' . $request->image5->getClientOriginalExtension();
-                Storage::disk('public')->putFileAs('product/image', $request->image5, $imageName);
+                $filename = Str::random(32).".".$request->file('image5')->getClientOriginalExtension();
+                $request->file('image5')->move('uploads/', $filename);
     
-                $product_img->image  = $imageName;
+                $product_img->image  = $filename;
                 $product_img->save();
-
             };
 
 
@@ -186,7 +241,7 @@ class ProductController extends Controller
         // i still dont finish this
         $review = DB::table('reviews')
         ->join('customers','reviews.customer_id','=','customers.customer_id')
-        ->select('reviews.review_id','reviews.description','reviews.rating','customers.name')
+        ->select('reviews.review_id','reviews.description','reviews.rating','customers.name','reviews.created_at')
         ->where('reviews.product_id',$product_id)
         ->get();
 
@@ -212,7 +267,10 @@ class ProductController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request)
-    {
+    {     
+
+
+       
 
         // still not done
         $request->validate([
@@ -246,16 +304,17 @@ class ProductController extends Controller
     public function destroy($product_id)
     {
 
-        $images = Image::where('product_id',$product_id)->get();
+        // $images = Image::where('product_id',$product_id)->get();
         
-        foreach($images as $img){
-            if ($img->image) {
-                $exist = Storage::disk('public')->exists("product/image/{$img->image}");
-                if ($exist) {
-                    Storage::disk('public')->delete("product/image/{$img->image}");
-                }
-            }
-        };
+        // foreach($images as $img){
+        //     if ($img->image) {
+        //         $exist = Storage::disk('public')->exists("product/image/{$img->image}");
+        //         if ($exist) {
+        //             Storage::disk('public')->delete("product/image/{$img->image}");
+        //         }
+        //     }
+        // };
+
         Image::where('product_id',$product_id)->delete();
         Product::where('product_id',$product_id)->delete();
         return response('deleting product was done !');

@@ -87,34 +87,33 @@ class CustomerController extends Controller
     public function show($user_id)
     {
         //
-        $customer =  DB::table('customers')
-        ->join('users', 'customers.user_id', '=', 'users.user_id')
-        ->select('users.user_id','users.email','users.password','customers.phone', 'customers.name')
+        $customer =  DB::table('users')
+        ->join('customers', 'users.user_id', '=', 'customers.user_id')
+        ->join('carts','customers.user_id','=','carts.customer_id')
+        ->select('users.user_id','users.email','users.password','customers.phone', 'customers.name','carts.cart_id')
         ->where('customers.customer_id','=',$user_id)
         ->get();
 
-        $shopping_carts = DB::table('customers')
-        ->join('carts','customers.customer_id','=','carts.customer_id')
-        ->join('shopping_carts','carts.cart_id','=','shopping_carts.cart_id')
-        ->join('products','shopping_carts.product_id','=','products.product_id')
-        ->join('images','products.product_id','=','images.product_id')
-        ->select('shopping_carts.product_id','products.name','products.price','shopping_carts.quantity','images.image')
-        ->where('customers.customer_id',$user_id)
-        ->get();
+        // $shopping_carts = DB::table('customers')
+        // ->join('carts','customers.customer_id','=','carts.customer_id')
+        // ->join('shopping_carts','carts.cart_id','=','shopping_carts.cart_id')
+        // ->join('products','shopping_carts.product_id','=','products.product_id')
+        // ->join('images','products.product_id','=','images.product_id')
+        // // ->join('products','images.product_id','=','products.product_id')
+        // ->select('shopping_carts.shopping_cart_id','shopping_carts.product_id','products.name','products.price','shopping_carts.quantity','images.image','products.discount')
+        // ->where('customers.customer_id',$user_id)
+        // ->get();
 
-        $wish_list = DB::table('customers')
-        ->join('wish_lists','customers.customer_id','=','wish_lists.customer_id')
-        ->join('products','wish_lists.product_id','=','products.product_id')
-        ->join('images','products.product_id','=','images.product_id')
-        ->select('products.product_id','products.name','products.price','images.image')
-        ->where('customers.customer_id',$user_id)
-        ->get();
+        // $wish_list = DB::table('customers')
+        // ->join('wish_lists','customers.customer_id','=','wish_lists.customer_id')
+        // ->join('products','wish_lists.product_id','=','products.product_id')
+        // // ->join('shopping_stores','shopping_stores.product_id','=','products.product_id')
+        // ->join('images','products.product_id','=','images.product_id')
+        // ->select('products.product_id','products.name','products.price','images.image','products.discount')
+        // ->where('customers.customer_id',$user_id)
+        // ->get();
         
-        return [
-            "customer_data"      =>$customer,
-            "shopping_carts"     =>$shopping_carts,
-            "wish_list"          =>$wish_list
-        ];
+        return $customer;
     }
 
     /**

@@ -58,7 +58,9 @@ class WishlistController extends Controller
         $wish_list =  DB::table('wish_lists')
         ->join('customers', 'customers.customer_id', '=', 'wish_lists.customer_id')
         ->join('products','wish_lists.product_id','=','products.product_id')
-        ->select('products.product_id','products.name','products.price','products.discount')
+        ->join('images','products.product_id','=','images.product_id')
+        ->select('wish_lists.wishlist_id','products.product_id','products.name','products.price','products.discount','images.image')
+        ->where('images.type','=','main_product_image')
         ->where('wish_lists.customer_id','=',$customer_id)
         ->get();
         

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Shopping_cart;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ShoppingCartController extends Controller
 {
@@ -14,7 +15,7 @@ class ShoppingCartController extends Controller
      */
     public function index()
     {
-        
+        return Shopping_cart::all();
     }
 
 
@@ -25,7 +26,8 @@ class ShoppingCartController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    { 
+        
         
         $request->validate([
             'cart_id'    =>'required',
@@ -41,6 +43,8 @@ class ShoppingCartController extends Controller
         $shopping_cart->product_id       = $request->product_id;
         $shopping_cart->quantity         = $request->quantity;
         $shopping_cart->save();
+
+        return response('The shopping cart is added !');
     }
 
     /**
@@ -49,21 +53,17 @@ class ShoppingCartController extends Controller
      * @param  \App\Models\Shopping_cart  $shopping_cart
      * @return \Illuminate\Http\Response
      */
-    public function show(Shopping_cart $shopping_cart)
+    public function show($cart_id)
     {
         //
+        // return Shopping_cart::where('cart_id',$cart_id)->get();
+        return DB::table('shopping_carts')
+        ->join('products','shopping_carts.product_id','=','products.product_id')
+        ->select('products.price','shopping_carts.quantity','products.product_id','products.discount','shopping_cart_id')
+        ->where('cart_id',$cart_id)->get();
+        
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Shopping_cart  $shopping_cart
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Shopping_cart $shopping_cart)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -72,9 +72,17 @@ class ShoppingCartController extends Controller
      * @param  \App\Models\Shopping_cart  $shopping_cart
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Shopping_cart $shopping_cart)
+    public function update(Request $request,$shopping_cart_id)
     {
-        //
+        $request->validate([
+            'quantity'   => 'required',
+        ]);
+
+        Shopping_cart::where('shopping_cart_id',$shopping_cart_id)
+        ->update(['quantity' => $request->quantity]);
+
+        return response('shopping cart update is done !');
+
     }
 
     /**
