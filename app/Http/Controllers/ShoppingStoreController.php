@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Shopping_store;
 use App\Models\User;
 use App\Models\Image;
+use App\Models\Product;
+use App\Models\Gallery;
+use App\Models\Shopping_cart;
+use App\Models\Review;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -76,7 +80,30 @@ class ShoppingStoreController extends Controller
 
         return response('The update of shopping store information is Done !');
         }
-        else{
+        else if($request->shopping_store_id){
+            User::where('user_id',$request->shopping_store_id)
+            ->update([  'email'   =>$request->email,
+                        'password'=>$request->password
+                    ]);
+
+
+            // Create file
+            // $filename = Str::random(32).".".$request->image1->getClientOriginalExtension();
+            // $request->image1->move('uploads/', $filename);
+
+
+            Shopping_store::where('shopping_store_id',$request->shopping_store_id)
+            ->update([  'name'        =>$request->name,
+                        'phone'       =>$request->phone,
+                        'phone2'      =>$request->phone2,
+                        'address'     =>$request->address,
+                        'address2'    =>$request->address2,
+                        'description' =>$request->description,
+                    ]);
+
+        return response('The update of shopping store information is Done !');
+        }
+      
         // Insert into User table
         // ----------------------
         $user_id  = uniqid('user_');
@@ -97,10 +124,11 @@ class ShoppingStoreController extends Controller
         $shopping_store->address            = $request->address;
         $shopping_store->address2           = $request->address2;
         $shopping_store->description        = $request->description;
+        $shopping_store->logo               = " ";
         $shopping_store->save();
 
         return response('The add of shopping store  is Done !');
-        }
+      
 
 
 
@@ -196,9 +224,22 @@ class ShoppingStoreController extends Controller
      */
     public function destroy($shopping_store_id)
     {
+        Gallery::where('shopping_store_id',$shopping_store_id)->delete();
+        $products = DB::table('products')->select('product_id')
+        ->where('shopping_store_id',$shopping_store_id)->get();
+        foreach($products as $p){
+            Shopping_cart::where('product_id',$p->product_id)->delete();
+            Image::where('product_id',$p->product_id)->delete();
+            Review::where('product_id',$p->product_id)->delete();
+            Product::where('product_id',$p->product_id)->delete();
+        }
+
+        // // Product::where('shopping_store_id',$shopping_store_id)->delete();
+
         Shopping_store::where('shopping_store_id',$shopping_store_id)->delete();
         User::where('user_id',$shopping_store_id)->delete();
 
-        return response('The Shopping Store is Deleted !');
+        // return $products[0]->product_id;
+        return response('the delete of shopping store is done!');
     }
 }

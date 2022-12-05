@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Image;
 use App\Models\Review;
 use App\Models\Shopping_store;
+use App\Models\Shopping_cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -26,16 +27,45 @@ class ProductController extends Controller
     public function index(Request $request)
     {
 
-        if($request->has('store_id')){
-            $products = DB::table('products')
+        if($request->has('discount')){
+            $products = DB::table('categories')
+            ->join('products','categories.category_id','=','products.category_id')
+            ->join('images','products.product_id','=','images.product_id')
+            ->select('products.product_id','products.name','products.price','products.discount','images.image')
+            ->where('products.discount','>=',$request->discount)
+            ->where('images.type','=','main_product_image')
+            ->get();
+            
+            return $products;
+        }
+        else if($request->has('store_id')){
+            $pro = DB::table('products')
             ->join('images','products.product_id','=','images.product_id')
             ->select('products.product_id','products.name','products.price','products.discount','images.image')
             ->where('products.shopping_store_id',$request->store_id)
             ->where('images.type','main_product_image')
             ->get();
-            return $products;
+            // $products = [];
+            // foreach($products as $p){
+            //     $rating = DB::table('products')
+            //     ->join('reviews','products.product_id','=','reviews.product_id')
+            //     ->where('products.product_id',$p->product_id)
+            //     ->avg('rating');
+
+    
+            //     $arr = array("rating"=>floatval($rating),"name"=>$p->name,"product_id"=>$p->product_id,
+            //                 "price"=>$p->price,"discount"=>$p->discount,"image"=>$p->image);
+                
+            //     array_push($product,$arr);
+                
+            // }
+
+
+
+
+            return $pro;
         }
-        if($request->has('category_id') && $request->has('name')){
+        else if($request->has('category_id') && $request->has('name')){
 
             $products = DB::table('categories')
             ->join('products','categories.category_id','=','products.category_id')
@@ -46,10 +76,31 @@ class ProductController extends Controller
             ->where('images.type','=','main_product_image')
             ->get();
             
-            return $products;
+            $product = [];
+            foreach($products as $p){
+                $rating = DB::table('products')
+                ->join('reviews','products.product_id','=','reviews.product_id')
+                ->where('products.product_id',$p->product_id)
+                ->avg('rating');
+    
+                $shopping_store = DB::table('products')
+                ->join('shopping_stores','products.shopping_store_id','=','shopping_stores.shopping_store_id')
+                // ->select('shopping_stores.name')
+                ->where('products.product_id',$p->product_id)
+                ->get('shopping_stores.name');
+    
+                $arr = array("rating"=>floatval($rating),"name"=>$p->name,"product_id"=>$p->product_id,
+                            "price"=>$p->price,"discount"=>$p->discount,"image"=>$p->image,
+                            "shopping_store"=>$shopping_store[0]->name);
+                
+                array_push($product,$arr);
+                
+            }
+    
+            return $product;
             
             }
-        if($request->has('category_id')){
+        else if($request->has('category_id')){
             $products = DB::table('categories')
             ->join('products','categories.category_id','=','products.category_id')
             ->join('images','products.product_id','=','images.product_id')
@@ -57,7 +108,39 @@ class ProductController extends Controller
             ->where('categories.category_id',$request->category_id )
             ->where('images.type','=','main_product_image')
             ->get();
-            return $products;
+            // return $products;
+            $product = [];
+            foreach($products as $p){
+                $rating = DB::table('products')
+                ->join('reviews','products.product_id','=','reviews.product_id')
+                ->where('products.product_id',$p->product_id)
+                ->avg('rating');
+    
+                $shopping_store = DB::table('products')
+                ->join('shopping_stores','products.shopping_store_id','=','shopping_stores.shopping_store_id')
+                // ->select('shopping_stores.name')
+                ->where('products.product_id',$p->product_id)
+                ->get('shopping_stores.name');
+    
+                $arr = array("rating"=>floatval($rating),"name"=>$p->name,"product_id"=>$p->product_id,
+                            "price"=>$p->price,"discount"=>$p->discount,"image"=>$p->image,
+                            "shopping_store"=>$shopping_store[0]->name);
+                
+                array_push($product,$arr);
+                
+            }
+    
+            return $product;
+
+
+
+
+
+
+
+
+
+
             }
         if($request->has('name')){
 
@@ -69,7 +152,28 @@ class ProductController extends Controller
                 ->where('images.type','=','main_product_image')
                 ->get();
                 
-                return $products;
+                $product = [];
+                foreach($products as $p){
+                    $rating = DB::table('products')
+                    ->join('reviews','products.product_id','=','reviews.product_id')
+                    ->where('products.product_id',$p->product_id)
+                    ->avg('rating');
+        
+                    $shopping_store = DB::table('products')
+                    ->join('shopping_stores','products.shopping_store_id','=','shopping_stores.shopping_store_id')
+                    // ->select('shopping_stores.name')
+                    ->where('products.product_id',$p->product_id)
+                    ->get('shopping_stores.name');
+        
+                    $arr = array("rating"=>floatval($rating),"name"=>$p->name,"product_id"=>$p->product_id,
+                                "price"=>$p->price,"discount"=>$p->discount,"image"=>$p->image,
+                                "shopping_store"=>$shopping_store[0]->name);
+                    
+                    array_push($product,$arr);
+                    
+                }
+        
+                return $product;
                 
                 }
         
@@ -78,8 +182,30 @@ class ProductController extends Controller
         ->select('products.product_id','products.name','products.price','products.discount','images.image')
         ->where('images.type','main_product_image')
         ->get();
-        
-        return $pro;
+
+
+        $product = [];
+        foreach($pro as $p){
+            $rating = DB::table('products')
+            ->join('reviews','products.product_id','=','reviews.product_id')
+            ->where('products.product_id',$p->product_id)
+            ->avg('rating');
+
+            $shopping_store = DB::table('products')
+            ->join('shopping_stores','products.shopping_store_id','=','shopping_stores.shopping_store_id')
+            // ->select('shopping_stores.name')
+            ->where('products.product_id',$p->product_id)
+            ->get('shopping_stores.name');
+
+            $arr = array("rating"=>floatval($rating),"name"=>$p->name,"product_id"=>$p->product_id,
+                        "price"=>$p->price,"discount"=>$p->discount,"image"=>$p->image,
+                        "shopping_store"=>$shopping_store[0]->name);
+            
+            array_push($product,$arr);
+            
+        }
+
+        return $product;
         
     
     }
@@ -237,6 +363,10 @@ class ProductController extends Controller
         $product_data = Product::select('product_id','shopping_store_id','name','description','price','discount')->where('product_id',$product_id)->get();
         $shopping_store_data = Shopping_store::select('name')->where('shopping_store_id',$product_data[0]->shopping_store_id)->get();
         $images  = Image::select('image')->where('product_id',$product_id)->get();
+        $rating = DB::table('products')
+        ->join('reviews','products.product_id','=','reviews.product_id')
+        ->where('products.product_id',$product_id)
+        ->avg('rating');
         
         // i still dont finish this
         $review = DB::table('reviews')
@@ -248,6 +378,7 @@ class ProductController extends Controller
 
         $all_data = [
             "product_data"  =>$product_data,
+            "rating"        =>floatval($rating),
             "store_data"    =>$shopping_store_data,
             "images"        =>$images,
             "review"        =>$review,
@@ -314,7 +445,8 @@ class ProductController extends Controller
         //         }
         //     }
         // };
-
+        Shopping_cart::where('product_id',$product_id)->delete();
+        Review::where('product_id',$product_id)->delete();
         Image::where('product_id',$product_id)->delete();
         Product::where('product_id',$product_id)->delete();
         return response('deleting product was done !');

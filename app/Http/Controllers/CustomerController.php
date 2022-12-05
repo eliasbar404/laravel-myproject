@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Customer;
 use App\Models\Cart;
-// use App\Models\Wishlist;
+use App\Models\Shopping_cart;
+use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use app\Notifications\EmailverificationNotification;
 
 
 class CustomerController extends Controller
@@ -41,9 +43,9 @@ class CustomerController extends Controller
             'name'           =>'required',
             'email'          =>'required',
             'password'       =>'required',
-            'gender'         =>'required',
+            // 'gender'         =>'nullable',
             'phone'          =>'required',
-            'birth_date'     =>'required',
+            // 'birth_date'     =>'nullable',
         ]);
         
         $user_id      = uniqid('user_');
@@ -66,14 +68,16 @@ class CustomerController extends Controller
         $customer->user_id       = $user_id;
         $customer->name          = $request->name;
         $customer->phone         = $request->phone;
-        $customer->gender        = $request->gender;
-        $customer->birth_date    = $request->birth_date;
+        // $customer->gender        = null;
+        // $customer->birth_date    = null;
         $customer->save();
         //create a cart for user/customer
         // ---------------------
         $cart->cart_id     = $cart_id;
         $cart->customer_id = $user_id;
         $cart->save();
+
+        // $user->notify(new EmailverificationNotification());
         
         return response('The creation of a Customer has done !');
     }
@@ -153,6 +157,12 @@ class CustomerController extends Controller
      */
     public function destroy($user_id)
     {
+        $cart_id = DB::table('carts')->select('cart_id')->where('customer_id',$user_id)->get();
+        $id = $cart_id[0]->cart_id;
+        // Delete Shopping carts
+        Shopping_cart::where('cart_id',$id)->delete();
+        // Delete WishList
+        Wishlist::where('customer_id',$user_id)->delete();
         // Delete Cart
         Cart::where('customer_id',$user_id)->delete();
         // Delete in Customer table
@@ -160,7 +170,7 @@ class CustomerController extends Controller
         // Delete in user table
         User::where('user_id',$user_id)->delete();
 
-
+        // return $id;
         return response('The delete of Customer is  done !');
     }
 }

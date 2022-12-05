@@ -23,7 +23,8 @@ class Shopping_store extends Model
         'phone2',
         'address',
         'address2',
-        'description'
+        'description',
+        'logo',
 
     ];
 }

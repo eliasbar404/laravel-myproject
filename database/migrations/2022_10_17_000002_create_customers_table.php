@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('user_id');
             $table->string('name');
             $table->string('phone')->unique();
-            $table->string('gender');
-            $table->date('birth_date');
+            // $table->string('gender')->nullable();
+            // $table->date('birth_date')->nullable();
 
             
             $table->primary('customer_id');

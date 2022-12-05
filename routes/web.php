@@ -15,6 +15,7 @@ use App\Http\Controllers\ImagesController;
 
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 
@@ -45,6 +46,11 @@ Route::resources([
     'categories'        => CategoryController::class,
     'images'            => ImagesController::class,
 ]);
+
+// Auth::routes([
+//     "verify" => true
+
+// ]);
 
 
 

@@ -23,8 +23,8 @@ class Customer extends Model
         'user_id',
         'name',
         'phone',
-        'gender',
-        'birth_date'
+        // 'gender',
+        // 'birth_date'
     ];
 
 }
